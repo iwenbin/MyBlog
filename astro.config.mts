@@ -14,6 +14,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  site: siteConfig.siteUrl,
+  site: 'https://iwenbin.github.io',
+  base: '/MyBlog',
   integrations: [sitemap(), mdx()],
 });
