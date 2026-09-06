@@ -14,7 +14,6 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  site: 'https://iwenbin.github.io',
-  base: '/MyBlog',
+  site: 'https://blog.wizepop.top',
   integrations: [sitemap(), mdx()],
 });
