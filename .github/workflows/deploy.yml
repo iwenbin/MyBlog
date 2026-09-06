@@ -1,0 +1,38 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Deploy via Rsync
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
+          SERVER_IP: ${{ secrets.VPS_IP }}
+          USERNAME: ${{ secrets.VPS_USER }}
+          TARGET_DIR: ${{ secrets.VPS_TARGET_DIR }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+          rsync -avz --delete ./dist/ $USERNAME@$SERVER_IP:$TARGET_DIR
